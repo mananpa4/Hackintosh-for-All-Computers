@@ -62,6 +62,16 @@ runs and draws its answers, so a screen cannot say something the console would
 not - and everything here can be done from a terminal instead, or by hand from
 two zip files.
 
+Laptop coverage reaches Tiger Lake, the 11th generation mobile parts
+(i5-1135G7, i7-1165G7 and their siblings): the builder detects them and writes
+their EFI. One thing to know first: their Intel Xe graphics have no Apple
+driver, so acceleration needs the community NootedGreen kext, which is not
+carried inside - the builder says so, writes the config with the graphics
+fallback, and the exact manual steps (device-id `499A0000`, the kext order,
+the boot flags) are recorded in `profiles/cpu/laptop/tiger-lake.toml` itself.
+Laptop parts newer than that have no profile yet, and the builder says
+`unknown` rather than guessing.
+
 <p align="center">
   <img src="https://raw.githubusercontent.com/yusufklncc/Hackintosh-for-All-Computers/main/Resources/App/recovery.png">&nbsp;
   <img src="https://raw.githubusercontent.com/yusufklncc/Hackintosh-for-All-Computers/main/Resources/App/usb.png">
@@ -104,6 +114,12 @@ The 179 configs are generated from a small set of profiles rather than stored,
 and the tooling that does it - the builder, the hardware tables, the equivalence
 gate that proves a profile change did not alter what anyone downloads - is
 documented in [tools/README.md](tools/README.md).
+
+If you are working with Claude, start with [CLAUDE.md](CLAUDE.md) (permanent
+project knowledge) and [CLAUDE_CONTEXT.md](CLAUDE_CONTEXT.md) (live state:
+what is done, what is pending, what was decided). Reusable external techniques
+- Apple software-update catalogs, USB enumeration, Tiger Lake parameters, CPU
+detection rules - are distilled in [SKILLS.md](SKILLS.md).
 
 The guide lives in [guide/](guide/), one file per page per language, and is
 built with MkDocs Material:

@@ -61,7 +61,8 @@ CPU_LABELS = {
     'skylake-x-w-cascade-lake-x-w': 'Skylake-X/W / Cascade Lake-X/W',
     'kaby-lake': 'Kaby Lake', 'coffe-lake': 'Coffee Lake',
     'coffe-lake-plus': 'Coffee Lake Plus', 'coffee-lake-whiskey-lake': 'Coffee Lake / Whiskey Lake',
-    'comet-lake': 'Comet Lake', 'ice-lake': 'Ice Lake', 'rocket-lake': 'Rocket Lake',
+    'comet-lake': 'Comet Lake', 'ice-lake': 'Ice Lake', 'tiger-lake': 'Tiger Lake',
+    'rocket-lake': 'Rocket Lake',
     'alder-lake': 'Alder Lake', 'raptor-lake': 'Raptor Lake',
     'bulldozer-jaguar': 'Bulldozer / Jaguar', 'ryzen-threadripper': 'Ryzen / Threadripper',
 }

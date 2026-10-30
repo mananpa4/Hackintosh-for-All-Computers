@@ -125,7 +125,7 @@ IGPU_GENERATIONS = {
     'Kaby Lake Refresh/Coffee Lake/Coffee Lake Refresh/Whiskey Lake/Comet Lake 8XXX/9XXX/10XXX':
         ['coffe-lake', 'coffe-lake-plus', 'coffee-lake-whiskey-lake', 'comet-lake'],
     'Ice Lake 10XXX': ['ice-lake'],
-    'Tiger Lake/Rocket Lake': ['rocket-lake'],
+    'Tiger Lake/Rocket Lake': ['rocket-lake', 'tiger-lake'],
     'Alder Lake/Rocket Lake': ['alder-lake'],
     'Raptor Lake': ['raptor-lake'],
 }

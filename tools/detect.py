@@ -76,8 +76,14 @@ INTEL_DESKTOP = {
 INTEL_LAPTOP = {
     2: 'sandy-bridge-uefi-bios', 3: 'ivy-bridge', 4: 'haswell', 5: 'broadwell',
     6: 'sky-lake', 7: 'kaby-lake', 8: 'coffee-lake-whiskey-lake',
-    9: 'coffe-lake-plus', 10: 'comet-lake', 11: 'ice-lake',
+    9: 'coffe-lake-plus', 10: 'comet-lake', 11: 'tiger-lake',
 }
+# 11th generation mobile is Tiger Lake (Intel Xe graphics). Ice Lake is 10th
+# generation mobile with a G suffix (1065G7); it previously sat at key 11 by
+# mistake and shadowed Tiger Lake, which had no profile. 12th generation
+# mobile and newer (Alder Lake and later) intentionally map to nothing: there
+# is no laptop profile for them yet, and a wrong answer already ticked is one
+# nobody rechecks.
 
 
 def cpu_generation(brand, laptop):

@@ -1,0 +1,285 @@
+# 0 published configs (profile added 2026-09; catalogue entries are a
+# maintainer decision - see "Tiger Lake" below - so ad-hoc and guided builds
+# are the way to use this until entries are published with verify --rehash).
+#
+# Tiger Lake is 11th generation mobile (e.g. i5-1135G7, i7-1165G7, i7-1185G7).
+# Its Intel Xe iGPU (8086:9A49 and siblings) has no macOS driver from Apple
+# and no WhateverGreen support: Dortania lists the whole generation as
+# unsupported, which is why data/gpu.toml carries it under status
+# "unsupported" and the builder offers the no-acceleration fallback
+# (0x12345678) or leaving the key out.
+#
+# What makes a Tiger Lake laptop boot with acceleration anyway is NootedGreen,
+# a community kext outside this repository, and it is NOT vendored here - so
+# this profile does not reference it (an unresolvable BundlePath would only
+# warn and build without it). The manual step, taken from the working
+# "EFI.Opencore.NoteBook.TigerLake.MOD" configuration this profile was
+# compared against:
+#
+#   1) add NootedGreen.kext to EFI/OC/Kexts and to Kernel.Add, ordered right
+#      after Lilu (kextorder.py checks OSBundleLibraries order - run it after
+#      editing, it never reorders);
+#   2) on PciRoot(0x0)/Pci(0x2,0x0) set device-id to hex:499a0000 with
+#      AAPL,ig-platform-id hex:0000499a, plus the MOD's helpers
+#      (AAPL,GfxYTile, complete-modeset, force-online, rps-control);
+#   3) use the NootedGreen boot flags instead of WhateverGreen ones, e.g.
+#      "-v alcid=12 watchdog=0 npci=0x2000 -wegnoegpu keepsyms=1 debug=0x100"
+#      plus the -ngreen* flags the kext documents.
+#
+# The MOD's single merged SSDT (MaLd0n.aml) is board-specific and is
+# deliberately NOT copied here: an SSDT written against one machine's tables
+# booted on another is worse than the generics. Keep the generic SSDTs below
+# and run the SSDTTime flow (setup.py offers it) for tailored ones; the
+# tailored pair then disables its generic counterpart with a warning.
+#
+# SMBIOS MacBookPro16,2 matches the MOD. The builder still checks what the
+# identity reaches via boards.json and offers the nearest still-served model
+# when the requested macOS is past it - answer that question rather than
+# editing this file.
+[ACPI]
+Delete = []
+
+[[ACPI.Add]]
+Comment = ""
+Enabled = true
+Path = "SSDT-PLUG-DRTNIA.aml"
+
+[[ACPI.Add]]
+Comment = ""
+Enabled = true
+Path = "SSDT-EC-USBX-LAPTOP.aml"
+
+[[ACPI.Add]]
+Comment = ""
+Enabled = true
+Path = "SSDT-AWAC.aml"
+
+[[ACPI.Add]]
+Comment = ""
+Enabled = true
+Path = "SSDT-PNLF-CFL.aml"
+
+[[ACPI.Add]]
+Comment = ""
+Enabled = true
+Path = "SSDT-RHUB.aml"
+
+[[ACPI.Add]]
+Comment = ""
+Enabled = true
+Path = "SSDT-XOSI.aml"
+
+[Booter.Quirks]
+DevirtualiseMmio = true
+EnableWriteUnprotector = false
+ProtectUefiServices = true
+RebuildAppleMemoryMap = true
+SetupVirtualMap = false
+SyncRuntimePermissions = true
+
+[DeviceProperties.Add."PciRoot(0x0)/Pci(0x2,0x0)"]
+"AAPL,ig-platform-id" = "hex:12345678"
+
+[[Kernel.Add]]
+Arch = "x86_64"
+BundlePath = "Lilu.kext"
+Comment = "V1.5.9"
+Enabled = true
+ExecutablePath = "Contents/MacOS/Lilu"
+MaxKernel = ""
+MinKernel = "8.0.0"
+PlistPath = "Contents/Info.plist"
+
+[[Kernel.Add]]
+Arch = "x86_64"
+BundlePath = "VirtualSMC.kext"
+Comment = "V1.2.8"
+Enabled = true
+ExecutablePath = "Contents/MacOS/VirtualSMC"
+MaxKernel = ""
+MinKernel = "8.0.0"
+PlistPath = "Contents/Info.plist"
+
+[[Kernel.Add]]
+Arch = "x86_64"
+BundlePath = "SMCBatteryManager.kext"
+Comment = ""
+Enabled = true
+ExecutablePath = "Contents/MacOS/SMCBatteryManager"
+MaxKernel = ""
+MinKernel = "8.0.0"
+PlistPath = "Contents/Info.plist"
+
+[[Kernel.Add]]
+Arch = "x86_64"
+BundlePath = "SMCProcessor.kext"
+Comment = ""
+Enabled = true
+ExecutablePath = "Contents/MacOS/SMCProcessor"
+MaxKernel = ""
+MinKernel = "11.0.0"
+PlistPath = "Contents/Info.plist"
+
+[[Kernel.Add]]
+Arch = "x86_64"
+BundlePath = "WhateverGreen.kext"
+Comment = "V1.5.6"
+Enabled = true
+ExecutablePath = "Contents/MacOS/WhateverGreen"
+MaxKernel = ""
+MinKernel = "10.0.0"
+PlistPath = "Contents/Info.plist"
+
+[[Kernel.Add]]
+Arch = "x86_64"
+BundlePath = "AppleALC.kext"
+Comment = "V1.6.8"
+Enabled = true
+ExecutablePath = "Contents/MacOS/AppleALC"
+MaxKernel = ""
+MinKernel = "8.0.0"
+PlistPath = "Contents/Info.plist"
+
+[[Kernel.Add]]
+Arch = "x86_64"
+BundlePath = "ECEnabler.kext"
+Comment = ""
+Enabled = true
+ExecutablePath = "Contents/MacOS/ECEnabler"
+MaxKernel = ""
+MinKernel = "11.0.0"
+PlistPath = "Contents/Info.plist"
+
+[[Kernel.Add]]
+Arch = "x86_64"
+BundlePath = "VoodooPS2Controller.kext"
+Comment = "V2.2.7"
+Enabled = true
+ExecutablePath = "Contents/MacOS/VoodooPS2Controller"
+MaxKernel = ""
+MinKernel = "15.0.0"
+PlistPath = "Contents/Info.plist"
+
+[[Kernel.Add]]
+Arch = "x86_64"
+BundlePath = "VoodooPS2Controller.kext/Contents/PlugIns/VoodooInput.kext"
+Comment = "V1.1.3"
+Enabled = true
+ExecutablePath = "Contents/MacOS/VoodooInput"
+MaxKernel = ""
+MinKernel = "15.0.0"
+PlistPath = "Contents/Info.plist"
+
+[[Kernel.Add]]
+Arch = "x86_64"
+BundlePath = "VoodooPS2Controller.kext/Contents/PlugIns/VoodooPS2Keyboard.kext"
+Comment = "V2.2.7"
+Enabled = true
+ExecutablePath = "Contents/MacOS/VoodooPS2Keyboard"
+MaxKernel = ""
+MinKernel = "15.0.0"
+PlistPath = "Contents/Info.plist"
+
+[[Kernel.Add]]
+Arch = "x86_64"
+BundlePath = "VoodooPS2Controller.kext/Contents/PlugIns/VoodooPS2Mouse.kext"
+Comment = "V2.2.7"
+Enabled = true
+ExecutablePath = "Contents/MacOS/VoodooPS2Mouse"
+MaxKernel = ""
+MinKernel = "15.0.0"
+PlistPath = "Contents/Info.plist"
+
+[[Kernel.Add]]
+Arch = "x86_64"
+BundlePath = "VoodooPS2Controller.kext/Contents/PlugIns/VoodooPS2Trackpad.kext"
+Comment = "V2.2.7"
+Enabled = true
+ExecutablePath = "Contents/MacOS/VoodooPS2Trackpad"
+MaxKernel = ""
+MinKernel = "15.0.0"
+PlistPath = "Contents/Info.plist"
+
+[[Kernel.Add]]
+Arch = "x86_64"
+BundlePath = "USBInjectAll.kext"
+Comment = ""
+Enabled = true
+ExecutablePath = "Contents/MacOS/USBInjectAll"
+MaxKernel = "16.99.99"
+MinKernel = "15.0.0"
+PlistPath = "Contents/Info.plist"
+
+[[Kernel.Add]]
+Arch = "x86_64"
+BundlePath = "USBToolBox.kext"
+Comment = "V1.2.0"
+Enabled = true
+ExecutablePath = "Contents/MacOS/USBToolBox"
+MaxKernel = ""
+MinKernel = "17.0.0"
+PlistPath = "Contents/Info.plist"
+
+[[Kernel.Add]]
+Arch = "x86_64"
+BundlePath = "UTBDefault.kext"
+Comment = "V1.2.0"
+Enabled = true
+ExecutablePath = ""
+MaxKernel = ""
+MinKernel = "17.0.0"
+PlistPath = "Contents/Info.plist"
+
+[[Kernel.Add]]
+Arch = "x86_64"
+BundlePath = "XHCI-unsupported.kext"
+Comment = ""
+Enabled = true
+ExecutablePath = ""
+MaxKernel = ""
+MinKernel = "15.0.0"
+PlistPath = "Contents/Info.plist"
+
+[Kernel.Scheme]
+KernelArch = "x86_64"
+
+[NVRAM.Add.7C436110-AB2A-4BBB-A880-FE41995C9F82]
+boot-args = "-v keepsyms=1 debug=0x100 -wegnoegpu alcid=1"
+
+[PlatformInfo.Generic]
+SystemProductName = "MacBookPro16,2"
+
+[[UEFI.Drivers]]
+Arguments = ""
+Comment = ""
+Enabled = true
+LoadEarly = false
+Path = "HfsPlus.efi"
+
+[[UEFI.Drivers]]
+Arguments = ""
+Comment = ""
+Enabled = true
+LoadEarly = false
+Path = "OpenCanopy.efi"
+
+[[UEFI.Drivers]]
+Arguments = ""
+Comment = ""
+Enabled = true
+LoadEarly = false
+Path = "OpenRuntime.efi"
+
+[[UEFI.Drivers]]
+Arguments = ""
+Comment = ""
+Enabled = true
+LoadEarly = false
+Path = "ToggleSipEntry.efi"
+
+[[UEFI.Drivers]]
+Arguments = ""
+Comment = ""
+Enabled = true
+LoadEarly = false
+Path = "ResetNvramEntry.efi"

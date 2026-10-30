@@ -551,7 +551,7 @@ models = ["UHD Graphics (G1)"]
 [[igpu]]
 section = "Tiger Lake/Rocket Lake"
 status = "unsupported"
-profiles = ["rocket-lake"]
+profiles = ["rocket-lake", "tiger-lake"]
 models = ["UHD Graphics for 11th Gen Intel Processors", "Intel Xe Graphics"]
 
 [[igpu]]
